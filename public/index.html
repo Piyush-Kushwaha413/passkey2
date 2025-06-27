@@ -1,4 +1,6 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
+
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -45,4 +47,188 @@ console.log(userNameField.value,passwordField.value);
     </script>
     
 </body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Singup Page</title>
+    <!-- <link rel="stylesheet" href="index.css"> -->
+    <style>
+        *{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+body{
+    font-family: lato sans-serif;
+}
+.outer-box{
+    width: 100vw;
+    height: 100vh;
+    background:linear-gradient(to top left, #3ed8ff, #a8f5ff);
+}
+.inner-box{
+    width: 400px;
+    margin: 5px auto;
+    position: relative;
+    top: 40%;
+    transform: translateY(-50%);
+    padding: 20px 40px;
+    border-radius: 8px;
+    background-color: #ffffffcc;
+    backdrop-filter: blur(8px);
+    z-index: 2;
+     
+}
+h1{
+font-size: 3rem;
+color: #212121;
+
+}
+.singup-header p{
+    font-size: 1rem;
+    color: #555;
+}
+.singup-body{
+    margin: 20px 0;
+
+}
+.singup-body p{
+    margin: 10px 0;
+}
+
+.singup-body p label{
+    display: block;
+    font-size: 1.2rem ;
+    font-weight: 100;
+
+}
+.singup-body p input{
+    width: 100%;
+    padding: 10px;
+    border-radius: 4px;
+    border: 2px solid #cccc;
+    font-size: 1rem;
+    margin-top: 4px;
+}
+.singup-body p input[type="submit"]{
+    background-color: #3498db;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+.singup-body p input[type="submit"]:hover{
+    background-color: #2b7db3;
+}
+.singup-footer{
+    color: #555;
+    text-align: center;
+    
+}
+.sinup-footer p a{
+    color: #2773a5;
+
+}
+.circle{
+    width: 200px;
+    height: 200px;
+    border-radius: 100px;
+    background: linear-gradient(to top right,#ffffff33,#ffffffff);
+    position: absolute;
+}
+.c1{
+top: 100px;
+left: 55px;
+}
+.c2{
+    bottom: 100px;
+    right: 55px;
+}
+
+
+
+    </style>
+</head>
+
+<body>
+    <div class="outer-box">
+        <div class="inner-box">
+            <!-- header-area -->
+            <header class="singup-header">
+            <h1>Singup</h1>
+            <p>in just 29s.</p>
+            </header>
+            <!-- main area -->
+            <main class="singup-body">
+                  <form action="#" id="register-form">
+                     
+                    <p>
+                        <label for="email">User Name</label>
+                       <input type="text" placeholder="UserName" id="username" required> 
+                    </p>
+                    <p>
+                        <label for="password">Set Your Password</label>
+                    <input type="text" placeholder="password" id="password" required> 
+                    </p>
+                    <p>
+                        
+                        <p>
+                        
+                            <input type="submit" id="submit" value="Create Account">  
+                        </p>
+
+                    </p>
+                 </form>
+
+            </main>
+
+            <footer class="singup-footer">
+                <p>
+                    Already have an account? <a href="#">longin</a>
+                </p>
+            </footer>
+        </div>
+        <div class="circle c1"></div>
+        <div class="circle c2"></div>
+     
+    </div>
+
+    <script>
+
+        const form = document.getElementById("register-form")
+        const userNameField = document.getElementById('username')
+        const passwordField = document.getElementById('password')
+       
+        form.addEventListener('submit',async (e)=>{
+            e.preventDefault()
+console.log("submit button ");
+console.log(userNameField.value,passwordField.value);
+
+            const response = await fetch('/register',{
+                method:'POST',
+                headers:{
+                    'content-Type': 'application/json'
+                },
+                body:JSON.stringify({ 
+                    username:userNameField.value,
+                    password:passwordField.value
+        
+                } )
+            })
+
+            const result = await response.json()
+            const {id} = result
+            window.location.replace(`http://localhost:3000/profile.html?userId=${id}`)
+
+            console.log(id);
+
+        })
+    </script>
+</body>
 </html>
+
+

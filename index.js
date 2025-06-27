@@ -41,7 +41,6 @@ app.post("/register-challenge", async (req, res) => {
   if (!userId) return res.status(404).json({ error: "user not found!!!!" });
 
   const user = userStore[userId];
-//   console.log("line 32 ", userStore);
   const challengePayload = await generateRegistrationOptions({
     rpID: "localhost",
     rpName: "My localhost Machine",
@@ -49,7 +48,7 @@ app.post("/register-challenge", async (req, res) => {
   });
   challengeStore[userId] = challengePayload.challenge;
 //   console.log("line 48 ", challengeStore);
-  return res.json({ option: challengePayload });
+  return res.json({ option: challengePayload , userName: user.username , userId: userId });
 });
 
 app.post("/register-verify", async (req, res) => {
@@ -69,9 +68,10 @@ app.post("/register-verify", async (req, res) => {
 
   if (!verificatoinResult.verified)
     return res.json({ error: "could not verify" });
+  
   userStore[userId].passkey = verificatoinResult.registrationInfo;
 
-  return res.json({ verified: "ture" });
+  return res.json({ verified: true });
 
 });
 

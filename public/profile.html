@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -7,10 +7,13 @@
   </head>
   <body>
     <h1>profile page</h1>
+
+    
     <button id="register-passkey-btn">create passkey</button>
     <script src="https://unpkg.com/@simplewebauthn/browser/dist/bundle/index.es5.umd.min.js"></script>
-    <script src="https://unpkg.com/@simplewebauthn/browser/dist/bundle/index.umd.min.js"></script>
-    <script>
+  
+   
+   <script>
       const registerPasskey = document.getElementById("register-passkey-btn");
 
       registerPasskey.addEventListener("click", async (e) => {
@@ -31,9 +34,9 @@
         //         'content-Type':'application/json' // mistake not type t in content
 
         const challengeResult = await response.json();
-        const { option } = challengeResult; //server side challenge
+        const { option , userName } = challengeResult; //server side challenge
 
-        console.log(option);
+        console.log(option, userName , userId);
         const authResult = await SimpleWebAuthnBrowser.startRegistration(
           option
         );
@@ -48,5 +51,199 @@
         });
       });
     </script>
+  </body>
+</html> -->
+
+<!-- new code  -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Profile Page</title>
+    <!-- <link rel="stylesheet" href="index.css"> -->
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: lato sans-serif;
+      }
+      .outer-box {
+        width: 100vw;
+        height: 100vh;
+        background: linear-gradient(to top left, #3ed8ff, #a8f5ff);
+      }
+      .inner-box {
+        width: 400px;
+        margin: 5px auto;
+        position: relative;
+        top: 40%;
+        transform: translateY(-50%);
+        padding: 20px 40px;
+        border-radius: 8px;
+        background-color: #ffffffcc;
+        backdrop-filter: blur(8px);
+        z-index: 2;
+      }
+      h1 {
+        font-size: 3rem;
+        color: #212121;
+      }
+      .singup-header p {
+        font-size: 1rem;
+        color: #555;
+      }
+      .singup-body {
+        margin: 20px 0;
+      }
+      #register-passkey-btn,
+      .singup-body p {
+        margin: 10px 0;
+      }
+
+      .singup-body p {
+        display: block;
+        font-size: 1.2rem;
+        font-weight: 100;
+      }
+      #register-passkey-btn,
+      .singup-body p input {
+        width: 100%;
+        padding: 10px;
+        border-radius: 4px;
+        border: 2px solid #cccc;
+        font-size: 1rem;
+        margin-top: 4px;
+      }
+      #register-passkey-btn {
+        width: 100%;
+        padding: 10px;
+        border-radius: 4px;
+        border: 2px solid #cccc;
+        font-size: 1rem;
+        margin-top: 4px;
+      }
+
+      #register-passkey-btn {
+        background-color: #3498db;
+        border: none;
+        color: white;
+        cursor: pointer;
+      }
+      #register-passkey-btn:hover {
+        background-color: #2b7db3;
+      }
+      .singup-footer {
+        color: #555;
+        text-align: center;
+      }
+      .sinup-footer p a {
+        color: #2773a5;
+      }
+      .circle {
+        width: 200px;
+        height: 200px;
+        border-radius: 100px;
+        background: linear-gradient(to top right, #ffffff33, #ffffffff);
+        position: absolute;
+      }
+      .c1 {
+        top: 100px;
+        left: 55px;
+      }
+      .c2 {
+        bottom: 100px;
+        right: 55px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="outer-box">
+      <div class="inner-box">
+        <!-- header-area -->
+        <header class="singup-header">
+          <h1>Set Passkey To Website</h1>
+          <p>in just 29s.</p>
+        </header>
+        <!-- main area -->
+        <main class="singup-body">
+          <p>Your UserId</p>
+          <p id="userValue"></p>
+          <p id="userMgs/">.</p>
+          <p>
+            <button id="register-passkey-btn">Create Passkey</button>
+          </p>
+        </main>
+
+
+
+        <footer class="singup-footer">
+          <p>Register an account? <a href="#" >login</a></p>
+        </footer>
+      </div>
+      <div class="circle c1"></div>
+      <div class="circle c2"></div>
+    </div>
+
+    <script>
+      const registerPasskey = document.getElementById("register-passkey-btn");
+      const url = new URL(window.location);
+      const userId = url.searchParams.get("userId");
+      document.getElementById("userValue").innerHTML = `${userId}`;
+
+      registerPasskey.addEventListener("click", async (e) => {
+        console.log("btn is working good");
+        //   const url = new URL(window.location);
+        //   const userId = url.searchParams.get("userId");
+        //   document.getElementById("userValue").innerHTML = "New text!";
+        console.log(userId);
+        const response = await fetch("/register-challenge", {
+          method: "POST",
+          headers: {
+            "content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: userId,
+          }),
+        });
+        //         'content-Type':'application/json' // mistake not type t in content
+
+        const challengeResult = await response.json();
+        const { option, userName } = challengeResult; //server side challenge
+
+        console.log(option, userName, userId);
+        const authResult = await SimpleWebAuthnBrowser.startRegistration(
+          option
+        );
+        console.log("authResult", authResult); // this generets the public key in object form
+
+        const verResult = await fetch("/register-verify", {
+          method: "POST",
+          headers: {
+            "content-Type": "application/json",
+          },
+          body: JSON.stringify({ userId, cred: authResult }),
+        });
+
+        const resPayLoad = await verResult.json();
+        console.log("verResult", resPayLoad.verified);
+
+        if (resPayLoad.verified) {
+          // document.getElementById("userMgs").innerHTML = "Passkey and User verifyed";
+
+            window.location.replace(`http://localhost:3000/login.html?userId=${userId}`)  
+            
+            
+       
+        }
+      });
+    </script>
+    <script src="https://unpkg.com/@simplewebauthn/browser/dist/bundle/index.es5.umd.min.js"></script>
   </body>
 </html>
