@@ -1,28 +1,156 @@
+
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>login page</title>
-  </head>
-  <body>
-    <form action="" id="login-form">
-      <input type="text" placeholder="UserId" id="userId" />
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>main login  Page</title>
+    <!-- <link rel="stylesheet" href="index.css"> -->
+    <style>
+        *{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+body{
+    font-family: lato sans-serif;
+}
+.outer-box{
+    width: 100vw;
+    height: 100vh;
+    background:linear-gradient(to top left, #3ed8ff, #a8f5ff);
+}
+.inner-box{
+    width: 400px;
+    margin: 5px auto;
+    position: relative;
+    top: 40%;
+    transform: translateY(-50%);
+    padding: 20px 40px;
+    border-radius: 8px;
+    background-color: #ffffffcc;
+    backdrop-filter: blur(8px);
+    z-index: 2;
+     
+}
+h1{
+font-size: 3rem;
+color: #212121;
 
-      <button type="submit">submit</button>
+}
+.header p{
+    font-size: 1rem;
+    color: #555;
+}
+.body{
+    margin: 20px 0;
+
+}
+.body p{
+    margin: 10px 0;
+}
+
+.body p label{
+    display: block;
+    font-size: 1.2rem ;
+    font-weight: 100;
+
+}
+.input , #submitBtn {
+    width: 100%;
+    padding: 10px;
+    border-radius: 4px;
+    border: 2px solid #cccc;
+    font-size: 1rem;
+    margin-top: 4px;
+}
+#submitBtn{
+    background-color: #3498db;
+    border: none;
+    color: white;
+    cursor: pointer;
+     padding: 10px;
+}
+#submitBtn:hover{
+    background-color: #2b7db3;
+}
+.footer{
+    color: #555;
+    text-align: center;
+    
+}
+.footer p a{
+    color: #2773a5;
+
+}
+.circle{
+    width: 200px;
+    height: 200px;
+    border-radius: 100px;
+    background: linear-gradient(to top right,#ffffff33,#ffffffff);
+    position: absolute;
+}
+.c1{
+top: 100px;
+left: 55px;
+}
+.c2{
+    bottom: 100px;
+    right: 55px;
+}
+
+
+
+    </style>
+</head>
+
+<body>
+    <div class="outer-box">
+        <div class="inner-box">
+            <!-- header-area -->
+            <header class="header">
+            <h1>login with passkey</h1>
+            <p>in just 9s.</p>
+            </header>
+            <!-- main area -->
+            <main class="body">
+                  <form action="" id="login-form">
+                    <p> Enter UserID : </p>
+                    <p id="DBUserId"></p>
+                    <p id="userMsg"></p>
+      <input type="text" placeholder="UserId" id="userId" class="input" />
+
+      <button type="submit" id="submitBtn">submit</button>
     </form>
 
+            </main>
+
+            <footer class="footer">
+                <p>
+                    Already have an account? <a href="#">longin</a>
+                </p>
+            </footer>
+        </div>
+        <div class="circle c1"></div>
+        <div class="circle c2"></div>
+     
+    </div>
+
     <script src="https://unpkg.com/@simplewebauthn/browser/dist/bundle/index.es5.umd.min.js"></script>
-    
+
     <script>
       const form = document.getElementById("login-form");
       const userIdField = document.getElementById("userId");
 
+      const url = new URL(window.location)
+      const urlUserId = url.searchParams.get("userId");
+        document.getElementById("DBUserId").innerHTML = urlUserId;
+
     //   using this we get the challene to fullfill
       form.addEventListener("submit", async (e) => {
         e.preventDefault();
-
-
+        console.log(userIdField.value);
 
        const authChallenge =  await fetch("/login-challenge", {
           method: "POST",
@@ -44,7 +172,7 @@ console.log("Authentication options:", option);
 const authChallengeRes = await SimpleWebAuthnBrowser.startAuthentication( option );
 console.log("Authentication authChallengeRes:", authChallengeRes);
 
-        await fetch("/login-verify", {
+      const loginRespo =   await fetch("/login-verify", {
           method: "POST",
           headers: {
             "content-Type": "application/json",
@@ -52,9 +180,21 @@ console.log("Authentication authChallengeRes:", authChallengeRes);
           body: JSON.stringify({ userId: userIdField.value ,  cred: authChallengeRes }),
         });
 
+        const respons = await loginRespo.json();
+        const {login} = respons;
 
+        if (login) {
+           window.location.replace(`http://localhost:3000/home.html?userId=${urlUserId}&userName=${respons.userName}`)
+        }else{
+          document.getElementById("useMsg").innerHTML = respons.console.error();
+          ;
+        }
+
+        console.log("login:", login);
 
       });
     </script>
-  </body>
+</body>
 </html>
+
+

@@ -8,6 +8,12 @@ const {
   generateAuthenticationOptions
 } = require("@simplewebauthn/server");
 
+const crypto = require('node:crypto');
+if(!globalThis.crypto){
+  globalThis.crypto = crypto
+}
+
+
 const PORT = 3000;
 const app = express();
 // a public directry for client side code
@@ -126,7 +132,7 @@ app.post("/register-verify", async (req, res) => {
     if(!result.verified) return res.json({error:'something went wrong'})
 
     // login the user
-    return res.json({success: "userVerified", userId})
+    return res.json({success: "userVerified", userId , login: true , userName: user.username})
   })
 
 app.listen(PORT, () => {
