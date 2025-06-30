@@ -51,7 +51,7 @@ app.post("/register-challenge", async (req, res) => {
     // rpID: "localhost",
     // rpName: "My localhost Machine",
     // userName: user.username,
-    rpID: "passkey2-xd6k.onrender.com",
+    rpID: "passkey2-3af4.onrender.com",
     rpName: "My cloud Machine",
     userName: user.username,
   });
@@ -70,8 +70,8 @@ app.post("/register-verify", async (req, res) => {
 
   const verificatoinResult = await verifyRegistrationResponse({
     expectedChallenge: challenge,
-    expectedRPID: "passkey2-xd6k.onrender.com",
-    expectedOrigin: "https://passkey2-xd6k.onrender.com",
+    expectedRPID: "passkey2-3af4.onrender.com",
+    expectedOrigin: "https://passkey2-3af4.onrender.com",
     response: cred,
   });
 
@@ -94,7 +94,7 @@ app.post("/register-verify", async (req, res) => {
       return res.status(404).json({ error: " user not found" });
 
     const opts = await generateAuthenticationOptions({
-      rpID: "passkey2-xd6k.onrender.com",
+      rpID: "passkey2-3af4.onrender.com",
     });
 
     console.log("api called");
@@ -120,8 +120,8 @@ app.post("/register-verify", async (req, res) => {
 
     const result = await verifyAuthenticationResponse({
       expectedChallenge: challenge,
-      expectedOrigin:'https://passkey2-xd6k.onrender.com',
-      expectedRPID:'passkey2-xd6k.onrender.com',
+      expectedOrigin:'https://passkey2-3af4.onrender.com',
+      expectedRPID:'passkey2-3af4.onrender.com',
         response: cred,
         credential: {
           id:user.passkey.credential.id,
