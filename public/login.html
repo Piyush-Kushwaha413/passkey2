@@ -184,7 +184,7 @@ console.log("Authentication authChallengeRes:", authChallengeRes);
         const {login} = respons;
 
         if (login) {
-           window.location.replace(`http://passkeyauthentication.onrender.com/home.html?userId=${urlUserId}&userName=${respons.userName}`)
+           window.location.replace(`http://passkey2-xd6k.onrender.com/home.html?userId=${urlUserId}&userName=${respons.userName}`)
         }else{
           document.getElementById("useMsg").innerHTML = respons.console.error();
           ;
