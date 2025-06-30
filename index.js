@@ -48,8 +48,11 @@ app.post("/register-challenge", async (req, res) => {
 
   const user = userStore[userId];
   const challengePayload = await generateRegistrationOptions({
-    rpID: "localhost",
-    rpName: "My localhost Machine",
+    // rpID: "localhost",
+    // rpName: "My localhost Machine",
+    // userName: user.username,
+    rpID: "passkeyauthentication.onrender.com",
+    rpName: "My cloud Machine",
     userName: user.username,
   });
   challengeStore[userId] = challengePayload.challenge;
@@ -67,8 +70,8 @@ app.post("/register-verify", async (req, res) => {
 
   const verificatoinResult = await verifyRegistrationResponse({
     expectedChallenge: challenge,
-    expectedRPID: "localhost",
-    expectedOrigin: "http://localhost:3000",
+    expectedRPID: "passkeyauthentication.onrender.com",
+    expectedOrigin: "https://passkeyauthentication.onrender.com",
     response: cred,
   });
 
@@ -91,7 +94,7 @@ app.post("/register-verify", async (req, res) => {
       return res.status(404).json({ error: " user not found" });
 
     const opts = await generateAuthenticationOptions({
-      rpID: "localhost",
+      rpID: "passkeyauthentication.onrender.com",
     });
 
     console.log("api called");
@@ -116,9 +119,9 @@ app.post("/register-verify", async (req, res) => {
 
 
     const result = await verifyAuthenticationResponse({
-        expectedChallenge: challenge,
-        expectedOrigin:'http://localhost:3000',
-        expectedRPID:'localhost',
+      expectedChallenge: challenge,
+      expectedOrigin:'https://passkeyauthentication.onrender.com',
+      expectedRPID:'passkeyauthentication.onrender.com',
         response: cred,
         credential: {
           id:user.passkey.credential.id,
